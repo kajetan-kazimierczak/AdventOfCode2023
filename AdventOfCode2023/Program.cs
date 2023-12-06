@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using AdventOfCode2023.Day05;
+using AdventOfCode2023.Day06;
 
-new Day05().Run();
+new Day06().Run();
