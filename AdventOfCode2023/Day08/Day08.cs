@@ -52,14 +52,91 @@ namespace AdventOfCode2023.Day08
 
             return numSteps;
 
+        }
 
+
+        class Instruction
+        {
+            public string Name { get; set; }
+            public string L { get; set;  }
+            public string R { get; set; }
+            public int First { get; set; }
+            public int Rep { get; set; }
         }
 
         private ulong Part2(string[] data)
         {
-          
+            var steps = data[0];
+            ulong stepsLength = ulong.Parse(steps.Length.ToString());
+            var instructions = data.Skip(2).Select(x => new Instruction
+                { Name = x.Substring(0, 3), L = x.Substring(7, 3), R = x.Substring(12, 3), First = -1, Rep = -1 }).ToList();
+
+            var starts = instructions.Where(x => x.Name.EndsWith('A')).ToList();
+
+            var z = new List<(int first,int rep)>();
+
+            foreach (var s in starts)
+            {
+                var a = FindStepsToZ(instructions, steps, s.Name);
+                z.Add(a);
+            }
+
+            var gcd = z.Select(x => (ulong)x.rep).ToList().Aggregate(GCD);
+
+            var t = z.Select(x => (ulong)x.rep / gcd).ToList();
+
+            var q = t.Aggregate((x, y) => x * y);
+
+            var ans = q * gcd;
+
+            return ans;
         }
-        
+
+        private (int first, int rep) FindStepsToZ(
+            List<Instruction> instructions, string steps, string start)
+        {
+            int stepsLength = int.Parse(steps.Length.ToString());
+            var current = start;
+            var step = 0;
+            while (true)
+            {
+                
+                var i = instructions.Find(x => x.Name == current);
+                if (i.First == -1)
+                {
+                    i.First = step;
+                }
+                else
+                {
+                    i.Rep = step - i.First;
+                    if (i.Name.EndsWith('Z')) 
+                        break;
+                }
+
+                var a = instructions.FindAll(x => x.Name.EndsWith('Z'));
+
+                if (steps[(int)(step % stepsLength)] == 'L')
+                {
+                    current =  i.L;
+                }
+                else
+                {
+                    current = i.R;
+                }
+
+                step++;
+            }
+
+            return (instructions.Find(x => x.Name == current).First, instructions.Find(x => x.Name == current).Rep);
+        }
+
+     
+
+        static ulong GCD(ulong a, ulong b)
+        {
+            return b == 0 ? a : GCD(b, a % b);
+        }
+
         private ulong Part2_bruteforce_takes_forever(string[] data)
         {
             var steps = data[0];
@@ -89,56 +166,6 @@ namespace AdventOfCode2023.Day08
         }
 
 
-        //    private object Part2(string[] data)
-        //    {
-        //        var graph = ParseInput(data);
-        //        var steps = CountStepsToZ(graph);
-        //        return steps;
-        //    }
-
-        //    Dictionary<string, Node> ParseInput(string[] input)
-        //    {
-        //        var graph = new Dictionary<string, Node>();
-        //        foreach (var line in input)
-        //        {
-        //            var parts = line.Split(' ');
-        //            var node = new Node { Name = parts[0] };
-        //            node.Left = graph.ContainsKey(parts[1]) ? graph[parts[1]] : new Node { Name = parts[1] };
-        //            node.Right = graph.ContainsKey(parts[2]) ? graph[parts[2]] : new Node { Name = parts[2] };
-        //            graph[node.Name] = node;
-        //        }
-        //        return graph;
-        //    }
-        //    int CountStepsToZ(Dictionary<string, Node> graph)
-        //    {
-        //        var queue = new Queue<IEnumerable<Node>>();
-        //        var startNodes = graph.Values.Where(n => n.Name.EndsWith("A"));
-        //        queue.Enqueue(startNodes);
-
-        //        int steps = 0;
-        //        while (queue.Any())
-        //        {
-        //            var currentNodes = queue.Dequeue();
-        //            steps++;
-
-        //            // Check if all nodes end with 'Z'
-        //            if (currentNodes.All(n => n.Name.EndsWith("Z")))
-        //            {
-        //                return steps;
-        //            }
-
-        //            // Add next nodes to the queue
-        //            var nextNodes = currentNodes.SelectMany(n => new[] { n.Left, n.Right });
-        //            queue.Enqueue(nextNodes);
-        //        }
-        //        return steps;
-        //    }
-        //}
-        //class Node
-        //{
-        //    public string Name;
-        //    public Node Left;
-        //    public Node Right;
-        //}
+  
     }
 }
