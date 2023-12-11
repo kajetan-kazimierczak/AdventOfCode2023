@@ -78,7 +78,7 @@ namespace AdventOfCode2023.Day10
 
                     
 
-                    if (inside && data[row][col] == '.')
+                    if (inside && (data[row][col] == '.' || currentPosition == null))
                     {
                         tilesCount++;
                     }
@@ -128,108 +128,7 @@ namespace AdventOfCode2023.Day10
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        //List<Position> CreateOrderedListOfCorners(List<Position> positions)
-        //{
-        //    var corners = new List<Position>();
-
-        //    var current = positions.First();
-        //    //corners.Add(current);
-        //    var direction = 'L';
-        //    var tmp = positions[1];
-
-        //    direction = tmp.Row == current.Row ? (tmp.Col > current.Col ? 'L' : 'R') : ( tmp.Row > current.Row ? 'D' : 'U' );
-
-        //    while (!corners.Any(x => x.Col == tmp.Col && x.Row == tmp.Row))
-        //    {
-        //        if (current.Shape == 'S')
-        //        {
-        //            corners.Add(current);
-        //        }
-        //        if (current.Shape == 'F')
-        //        {
-        //            direction = direction switch { 'L' => 'D', 'U' => 'R', _ => throw new Exception() };
-        //            corners.Add(current);
-        //        }
-        //        if (current.Shape == '7')
-        //        {
-        //            direction = direction switch { 'R' => 'D', 'U' => 'L', _ => throw new Exception() };
-        //            corners.Add(current);
-        //        }
-        //        if (current.Shape == 'J')
-        //        {
-        //            direction = direction switch { 'R' => 'U', 'D' => 'L', _ => throw new Exception() };
-        //            corners.Add(current);
-        //        }
-        //        if (current.Shape == 'L')
-        //        {
-        //            direction = direction switch { 'L' => 'U', 'D' => 'L', _ => throw new Exception() };
-        //            corners.Add(current);
-        //        }
-                
-        //        if (direction == 'L')
-        //        {
-        //            var next = positions.Where(x => x.Row == current.Row).OrderBy(x => x.Col).First(x => x.Col > current.Col);
-        //            corners.Add(next);
-        //            current = next;
-        //        }
-        //        else if (direction == 'R')
-        //        {
-        //            var next = positions.Where(x => x.Row == current.Row).OrderByDescending(x => x.Col).First(x => x.Col < current.Col);
-        //            corners.Add(next);
-        //            current = next;
-        //        }
-        //        else if (direction == 'U')
-        //        {
-        //            var next = positions.Where(x => x.Col == current.Col).OrderByDescending(x => x.Row).First(x => x.Row < current.Row);
-        //            corners.Add(next);
-        //            current = next;
-        //        }
-        //        else if (direction == 'D')
-        //        {
-        //            var next = positions.Where(x => x.Col == current.Col).OrderBy(x => x.Row).First(x => x.Row > current.Row);
-        //            corners.Add(next);
-        //            current = next;
-        //        }
-        //    }
-           
-        //    return corners;
-        //}
-
-        //bool IsPointInPolygon(float x, float y, List<Position> corners)
-        //{
-        //    var polyCorners = corners.Count;
-        //    var polyY = corners.Select(x => x.Row).ToArray();
-        //    var polyX = corners.Select(x => x.Col).ToArray();
-        //    int i, j = polyCorners - 1;
-        //    bool oddNodes = false;
-
-        //    for (i = 0; i < polyCorners; i++)
-        //    {
-        //        if (polyY[i] < y && polyY[j] >= y
-        //            || polyY[j] < y && polyY[i] >= y)
-        //        {
-        //            if (polyX[i] + (y - polyY[i]) / (polyY[j] - polyY[i]) * (polyX[j] - polyX[i]) < x)
-        //            {
-        //                oddNodes = !oddNodes;
-        //            }
-        //        }
-        //        j = i;
-        //    }
-
-        //    return oddNodes;
-        //}
-
-        //private object Part1(string[] data)
-        //{
-            
-        //    var positions = LoadPositions(data);
-
-        //    var ans = positions.OrderByDescending(p => p.Distance).First().Distance;
-
-        //    return ans;
-        //}
-
-
+     
         private char GetRealStartShape(Position p, List<Position> positions)
         {
             var canGoLeft = positions.Any(x => x.Col == p.Col - 1 && x.Row == p.Row && (x.Shape == '-' || x.Shape == 'F' ||x.Shape == 'L'));
